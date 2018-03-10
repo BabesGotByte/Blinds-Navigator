@@ -1,3 +1,4 @@
+
 // trig is the source from which sound emmits out
 // echo is the destination, where the signals are 
 #define trig 9
@@ -6,13 +7,15 @@
 
 // prototype of a function
 int abe(void);
+void Read(void);
 
-//variables decelaration
+//variables delecaration
 long duration;
 long distance;
 long y;
 boolean on=false;
 int buzzer=12;
+int state=0;
 
 //a button to turn on and off the device
 int button=5;
@@ -27,17 +30,19 @@ void setup() {
   Serial.begin(9600);
 }
 
+
 void loop() {
   long j,k;
-  //read button state
   buttonState=digitalRead(button);
-  if(buttonState==HIGH){
+  //read button state
+  Read();
+  if(state==1){
 
   //k is the distance of the object from the person
-      k=abe();
+  k=abe();
   
   //if the distance is less than 1 metre ,then first weep will be smaller and then continously for the remaining cases we get longer weeps
-   if(k<100){
+   if((k<100)&&(k>0)){
       digitalWrite(buzzer,HIGH);
       delay(200);
       digitalWrite(buzzer,LOW);
@@ -154,4 +159,14 @@ int abe(void){
   Serial.println(distance);
   return (distance);
 }
-
+void Read(){
+  buttonState=digitalRead(button);
+  if(buttonState==HIGH){
+    if(state==0){
+      state=1;
+  }
+    else if(state==1){
+      state=0;
+  }
+  }
+}
